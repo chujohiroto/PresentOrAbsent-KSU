@@ -97,7 +97,7 @@ app.post('/clova', clovaMiddleware, clovaSkillHandler);
 // Or you can simply use `bodyParser.json()` to accept any request without verifying, e.g.,
 app.post('/clova', bodyParser.json(), clovaSkillHandler);
 
-server.post('/webhook', line.middleware(line_config), (req, res, next) => {
+app.post('/webhook', line.middleware(line_config), (req, res, next) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('');
 
