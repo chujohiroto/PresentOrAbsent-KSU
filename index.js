@@ -98,205 +98,200 @@ app.post('/clova', clovaMiddleware, clovaSkillHandler);
 app.post('/clova', bodyParser.json(), clovaSkillHandler);
 
 app.post('/webhook', line.middleware(line_config), (req, res, next) => {
-    let body = '';
-    req.on('data', (chunk) => {
-        body += chunk;
-    });
-    req.on('end', () => {
-        if (body === '') {
-            console.log('bodyが空です。');
-            return;
-        }
+    res.sendStatus(200);
 
-        let WebhookEventObject = JSON.parse(body).events[0];
-        //メッセージが送られて来た場合
-        if (WebhookEventObject.type === 'message') {
-            let SendMessageObject;
-            if (WebhookEventObject.message.type === 'text') {
-                if (WebhookEventObject.message.text == "check" || WebhookEventObject.message.text == "Check" || WebhookEventObject.message.text == "チェック") {
-                    SendMessageObject = [{
-                        "type": "flex",
-                        "altText": "This is a flex message",
-                        "contents": {
-                            "type": "bubble",
-                            "body": {
-                                "type": "box",
-                                "layout": "vertical",
-                                "contents": [
-                                    {
-                                        "type": "text",
-                                        "text": "何限目??",
-                                        "weight": "bold",
-                                        "size": "xl"
-                                    },
-                                    {
-                                        "type": "box",
-                                        "layout": "vertical",
-                                        "margin": "lg",
-                                        "spacing": "sm",
-                                        "contents": [
-                                            {
-                                                "type": "box",
-                                                "layout": "baseline",
-                                                "spacing": "sm",
-                                                "contents": [
-                                                    {
-                                                        "type": "text",
-                                                        "text": "Place",
-                                                        "color": "#aaaaaa",
-                                                        "size": "sm",
-                                                        "flex": 1
-                                                    },
-                                                    {
-                                                        "type": "text",
-                                                        "text": "京都産業大学",
-                                                        "wrap": true,
-                                                        "color": "#666666",
-                                                        "size": "sm",
-                                                        "flex": 5
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "type": "box",
-                                                "layout": "baseline",
-                                                "spacing": "sm",
-                                                "contents": [
-                                                    {
-                                                        "type": "text",
-                                                        "text": "Time",
-                                                        "color": "#aaaaaa",
-                                                        "size": "sm",
-                                                        "flex": 1
-                                                    },
-                                                    {
-                                                        "type": "text",
-                                                        "text": "1限目から8限目",
-                                                        "wrap": true,
-                                                        "color": "#666666",
-                                                        "size": "sm",
-                                                        "flex": 5
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            "footer": {
-                                "type": "box",
-                                "layout": "vertical",
-                                "spacing": "sm",
-                                "contents": [
-                                    {
-                                        "type": "button",
-                                        "style": "link",
-                                        "height": "sm",
-                                        "action": {
-                                            "type": "message",
-                                            "label": "1限目",
-                                            "text": "1限目"
-                                        }
-                                    },
-                                    {
-                                        "type": "button",
-                                        "style": "link",
-                                        "height": "sm",
-                                        "action": {
-                                            "type": "message",
-                                            "label": "2限目",
-                                            "text": "2限目"
-                                        }
-                                    },
-                                    {
-                                        "type": "button",
-                                        "style": "link",
-                                        "height": "sm",
-                                        "action": {
-                                            "type": "message",
-                                            "label": "3限目",
-                                            "text": "3限目"
-                                        }
-                                    },
-                                    {
-                                        "type": "button",
-                                        "style": "link",
-                                        "height": "sm",
-                                        "action": {
-                                            "type": "message",
-                                            "label": "4限目",
-                                            "text": "4限目"
-                                        }
-                                    },
-                                    {
-                                        "type": "button",
-                                        "style": "link",
-                                        "height": "sm",
-                                        "action": {
-                                            "type": "message",
-                                            "label": "5限目",
-                                            "text": "5限目"
-                                        }
-                                    },
-                                    {
-                                        "type": "button",
-                                        "style": "link",
-                                        "height": "sm",
-                                        "action": {
-                                            "type": "message",
-                                            "label": "6限目",
-                                            "text": "6限目"
-                                        }
-                                    },
-                                    {
-                                        "type": "button",
-                                        "style": "link",
-                                        "height": "sm",
-                                        "action": {
-                                            "type": "message",
-                                            "label": "7限目",
-                                            "text": "7限目"
-                                        }
-                                    },
-                                    {
-                                        "type": "button",
-                                        "style": "link",
-                                        "height": "sm",
-                                        "action": {
-                                            "type": "message",
-                                            "label": "8限目",
-                                            "text": "8限目"
-                                        }
-                                    },
+    let events_processed = [];
 
-                                    {
-                                        "type": "spacer",
-                                        "size": "sm"
-                                    }
-                                ],
-                                "flex": 0
-                            }
+    // イベントオブジェクトを順次処理。
+    req.body.events.forEach((event) => {
+        // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
+        if (event.type == "message" && event.message.type == "text") {
+            if (event.message.text == "check" || event.message.text == "Check" || event.message.text == "チェック") {
+                events_processed.push(bot.replyMessage(event.replyToken, {
+                    "type": "flex",
+                    "altText": "This is a flex message",
+                    "contents": {
+                        "type": "bubble",
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "何限目??",
+                                    "weight": "bold",
+                                    "size": "xl"
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "margin": "lg",
+                                    "spacing": "sm",
+                                    "contents": [
+                                        {
+                                            "type": "box",
+                                            "layout": "baseline",
+                                            "spacing": "sm",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": "Place",
+                                                    "color": "#aaaaaa",
+                                                    "size": "sm",
+                                                    "flex": 1
+                                                },
+                                                {
+                                                    "type": "text",
+                                                    "text": "京都産業大学",
+                                                    "wrap": true,
+                                                    "color": "#666666",
+                                                    "size": "sm",
+                                                    "flex": 5
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "baseline",
+                                            "spacing": "sm",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": "Time",
+                                                    "color": "#aaaaaa",
+                                                    "size": "sm",
+                                                    "flex": 1
+                                                },
+                                                {
+                                                    "type": "text",
+                                                    "text": "1限目から8限目",
+                                                    "wrap": true,
+                                                    "color": "#666666",
+                                                    "size": "sm",
+                                                    "flex": 5
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         },
-                    }]
-                }
-                else {
-                    SendMessageObject = [{
-                        type: 'text',
-                        text: getMessage(WebhookEventObject.message.text)
-                    }];
-                }
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                                {
+                                    "type": "button",
+                                    "style": "link",
+                                    "height": "sm",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "1限目",
+                                        "text": "1限目"
+                                    }
+                                },
+                                {
+                                    "type": "button",
+                                    "style": "link",
+                                    "height": "sm",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "2限目",
+                                        "text": "2限目"
+                                    }
+                                },
+                                {
+                                    "type": "button",
+                                    "style": "link",
+                                    "height": "sm",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "3限目",
+                                        "text": "3限目"
+                                    }
+                                },
+                                {
+                                    "type": "button",
+                                    "style": "link",
+                                    "height": "sm",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "4限目",
+                                        "text": "4限目"
+                                    }
+                                },
+                                {
+                                    "type": "button",
+                                    "style": "link",
+                                    "height": "sm",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "5限目",
+                                        "text": "5限目"
+                                    }
+                                },
+                                {
+                                    "type": "button",
+                                    "style": "link",
+                                    "height": "sm",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "6限目",
+                                        "text": "6限目"
+                                    }
+                                },
+                                {
+                                    "type": "button",
+                                    "style": "link",
+                                    "height": "sm",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "7限目",
+                                        "text": "7限目"
+                                    }
+                                },
+                                {
+                                    "type": "button",
+                                    "style": "link",
+                                    "height": "sm",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "8限目",
+                                        "text": "8限目"
+                                    }
+                                },
+
+                                {
+                                    "type": "spacer",
+                                    "size": "sm"
+                                }
+                            ],
+                            "flex": 0
+                        }
+                    },
+                }));
             }
-            //var message = getMessage(WebhookEventObject.message.text);
-
-            client(WebhookEventObject.replyToken, SendMessageObject)
-                .then((body) => {
-                    console.log(body);
-                }, (e) => { console.log(e) });
+            else {
+                events_processed.push(bot.replyMessage(event.replyToken, {
+                    type: "text",
+                    text: getMessage(event.message.text)
+                }));
+            }
         }
-
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end('success');
+        else {
+            events_processed.push(bot.replyMessage(event.replyToken, {
+                type: "text",
+                text: "テキストメッセージで入力してください"
+            }));
+        }
     });
+    // すべてのイベント処理が終了したら何個のイベントが処理されたか出力。
+    Promise.all(events_processed).then(
+        (response) => {
+            console.log(`${response.length} event(s) processed.`);
+        }
+    );
 });
 
 app.listen(PORT, function () {
