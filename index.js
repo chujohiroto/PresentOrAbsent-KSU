@@ -84,7 +84,6 @@ const clovaSkillHandler = clova.Client
     })
     .onSessionEndedRequest(responseHelper => {
         const sessionId = responseHelper.getSessionId();
-
         // Do something on session end
     })
     .handle();
@@ -93,10 +92,10 @@ const clovaMiddleware = clova.Middleware({ applicationId: process.env.APPLICATIO
 
 // Use `clovaMiddleware` if you want to verify signature and applicationId.
 // Please note `applicationId` is required when using this middleware.
-app.post('/bot', clovaMiddleware, clovaSkillHandler);
+app.post('/clova', clovaMiddleware, clovaSkillHandler);
 
 // Or you can simply use `bodyParser.json()` to accept any request without verifying, e.g.,
-app.post('/bot', bodyParser.json(), clovaSkillHandler);
+app.post('/clova', bodyParser.json(), clovaSkillHandler);
 
 server.post('/webhook', line.middleware(line_config), (req, res, next) => {
     if (req.url !== '/webhook' || req.method !== 'POST') {
@@ -305,7 +304,6 @@ server.post('/webhook', line.middleware(line_config), (req, res, next) => {
     });
 });
 
-/* 2. listen()メソッドを実行して3000番ポートで待ち受け。*/
 app.listen(PORT, function () {
     console.log("Node.js is listening to PORT:" + server.address().port);
 });
