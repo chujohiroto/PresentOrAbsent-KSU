@@ -8,6 +8,7 @@ const line_config = {
     channelAccessToken: process.env.LINE_ACCESS_TOKEN, // 環境変数からアクセストークンをセットしています
     channelSecret: process.env.LINE_CHANNEL_SECRET // 環境変数からChannel Secretをセットしています
 };
+const bot = new line.Client(line_config);
 
 const clovaSkillHandler = clova.Client
     .configureSkill()
