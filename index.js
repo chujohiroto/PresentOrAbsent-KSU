@@ -16,7 +16,7 @@ const clovaSkillHandler = clova.Client
         responseHelper.setSimpleSpeech({
             lang: 'ja',
             type: 'PlainText',
-            value: '大学に間に合うかな',
+            value: '講義に間にあうか計算',
         });
     })
     .onIntentRequest(async responseHelper => {
@@ -32,7 +32,7 @@ const clovaSkillHandler = clova.Client
                     speech = {
                         lang: 'ja',
                         type: 'PlainText',
-                        value: `知らない言葉だよーん`
+                        value: `1限から6限までで指定してください`
                     }
                     responseHelper.setSimpleSpeech(speech)
                     break
@@ -165,7 +165,7 @@ app.post('/webhook', line.middleware(line_config), (req, res, next) => {
                                                 },
                                                 {
                                                     "type": "text",
-                                                    "text": "1限目から8限目",
+                                                    "text": "1限目から6限目",
                                                     "wrap": true,
                                                     "color": "#666666",
                                                     "size": "sm",
@@ -242,27 +242,6 @@ app.post('/webhook', line.middleware(line_config), (req, res, next) => {
                                         "text": "6限目"
                                     }
                                 },
-                                {
-                                    "type": "button",
-                                    "style": "link",
-                                    "height": "sm",
-                                    "action": {
-                                        "type": "message",
-                                        "label": "7限目",
-                                        "text": "7限目"
-                                    }
-                                },
-                                {
-                                    "type": "button",
-                                    "style": "link",
-                                    "height": "sm",
-                                    "action": {
-                                        "type": "message",
-                                        "label": "8限目",
-                                        "text": "8限目"
-                                    }
-                                },
-
                                 {
                                     "type": "spacer",
                                     "size": "sm"
