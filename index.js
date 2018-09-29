@@ -303,7 +303,7 @@ app.post('/webhook', line.middleware(line_config), (req, res, next) => {
 });
 
 app.listen(PORT, function () {
-    console.log("Node.js is listening to PORT:" + server.address().port);
+    //console.log("Node.js is listening to PORT:" + server.address().port);
 });
 
 function getSound(m) {
