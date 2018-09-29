@@ -98,10 +98,8 @@ app.post('/clova', clovaMiddleware, clovaSkillHandler);
 app.post('/clova', bodyParser.json(), clovaSkillHandler);
 
 server.post('/webhook', line.middleware(line_config), (req, res, next) => {
-    if (req.url !== '/webhook' || req.method !== 'POST') {
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end('');
-    }
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('');
 
     let body = '';
     req.on('data', (chunk) => {
