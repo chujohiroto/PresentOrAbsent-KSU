@@ -318,25 +318,19 @@ function getTimeLesson(t) {
             lesson = new Date(new Date().setHours(9, 0, 0, 0));
             break;
         case 2:
-            lesson = new Date(new Date().setHours(10, 30, 0, 0));
+            lesson = new Date(new Date().setHours(10, 45, 0, 0));
             break;
         case 3:
-            lesson = new Date(new Date().setHours(13, 0, 0, 0));
+            lesson = new Date(new Date().setHours(13, 15, 0, 0));
             break;
         case 4:
-            lesson = new Date(new Date().setHours(14, 30, 0, 0));
+            lesson = new Date(new Date().setHours(15, 0, 0, 0));
             break;
         case 5:
-            lesson = new Date(new Date().setHours(16, 0, 0, 0));
+            lesson = new Date(new Date().setHours(16, 45, 0, 0));
             break;
         case 6:
-            lesson = new Date(new Date().setHours(17, 30, 0, 0));
-            break;
-        case 7:
-            lesson = new Date(new Date().setHours(19, 0, 0, 0));
-            break;
-        case 8:
-            lesson = new Date(new Date().setHours(21, 30, 0, 0));
+            lesson = new Date(new Date().setHours(18, 30, 0, 0));
             break;
         default:
             lesson = new Date(new Date().setHours(0, 0, 0, 0));
