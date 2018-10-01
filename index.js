@@ -289,6 +289,7 @@ function getSound(m) {
 
 
 function getMessage(t) {
+    var t = str.slice(0, 1);
     var dtl = getTimeLesson(t);
 
     dtl.setMinutes(dtl.getMinutes() - 30);
